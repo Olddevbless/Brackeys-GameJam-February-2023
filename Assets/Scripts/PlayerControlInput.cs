@@ -89,6 +89,15 @@ public partial class @PlayerControlInput : IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""ThrowGrenade"",
+                    ""type"": ""Button"",
+                    ""id"": ""fd6e26dc-707e-49d7-abf3-dd1ab4bc11e2"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -309,6 +318,17 @@ public partial class @PlayerControlInput : IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""groups"": """",
                     ""action"": ""Slide"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""2720157f-9907-4af3-a97a-8971fe1f5194"",
+                    ""path"": ""<Keyboard>/g"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard&Mouse"",
+                    ""action"": ""ThrowGrenade"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -903,6 +923,7 @@ public partial class @PlayerControlInput : IInputActionCollection2, IDisposable
         m_Player_Prone = m_Player.FindAction("Prone", throwIfNotFound: true);
         m_Player_SwapWeapon = m_Player.FindAction("SwapWeapon", throwIfNotFound: true);
         m_Player_Slide = m_Player.FindAction("Slide", throwIfNotFound: true);
+        m_Player_ThrowGrenade = m_Player.FindAction("ThrowGrenade", throwIfNotFound: true);
         // UI
         m_UI = asset.FindActionMap("UI", throwIfNotFound: true);
         m_UI_Navigate = m_UI.FindAction("Navigate", throwIfNotFound: true);
@@ -981,6 +1002,7 @@ public partial class @PlayerControlInput : IInputActionCollection2, IDisposable
     private readonly InputAction m_Player_Prone;
     private readonly InputAction m_Player_SwapWeapon;
     private readonly InputAction m_Player_Slide;
+    private readonly InputAction m_Player_ThrowGrenade;
     public struct PlayerActions
     {
         private @PlayerControlInput m_Wrapper;
@@ -992,6 +1014,7 @@ public partial class @PlayerControlInput : IInputActionCollection2, IDisposable
         public InputAction @Prone => m_Wrapper.m_Player_Prone;
         public InputAction @SwapWeapon => m_Wrapper.m_Player_SwapWeapon;
         public InputAction @Slide => m_Wrapper.m_Player_Slide;
+        public InputAction @ThrowGrenade => m_Wrapper.m_Player_ThrowGrenade;
         public InputActionMap Get() { return m_Wrapper.m_Player; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -1022,6 +1045,9 @@ public partial class @PlayerControlInput : IInputActionCollection2, IDisposable
                 @Slide.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnSlide;
                 @Slide.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnSlide;
                 @Slide.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnSlide;
+                @ThrowGrenade.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnThrowGrenade;
+                @ThrowGrenade.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnThrowGrenade;
+                @ThrowGrenade.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnThrowGrenade;
             }
             m_Wrapper.m_PlayerActionsCallbackInterface = instance;
             if (instance != null)
@@ -1047,6 +1073,9 @@ public partial class @PlayerControlInput : IInputActionCollection2, IDisposable
                 @Slide.started += instance.OnSlide;
                 @Slide.performed += instance.OnSlide;
                 @Slide.canceled += instance.OnSlide;
+                @ThrowGrenade.started += instance.OnThrowGrenade;
+                @ThrowGrenade.performed += instance.OnThrowGrenade;
+                @ThrowGrenade.canceled += instance.OnThrowGrenade;
             }
         }
     }
@@ -1210,6 +1239,7 @@ public partial class @PlayerControlInput : IInputActionCollection2, IDisposable
         void OnProne(InputAction.CallbackContext context);
         void OnSwapWeapon(InputAction.CallbackContext context);
         void OnSlide(InputAction.CallbackContext context);
+        void OnThrowGrenade(InputAction.CallbackContext context);
     }
     public interface IUIActions
     {

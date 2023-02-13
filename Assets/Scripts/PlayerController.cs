@@ -9,6 +9,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField] int classSpeed;
     [SerializeField] GameObject model;
     [SerializeField] GameObject[] weapons;
+    [SerializeField] GameObject grenadePrefab;
     [SerializeField] GameObject holdergun;
     [SerializeField] GameObject currentWeapon;
     [SerializeField] Classes currentClass;
@@ -54,9 +55,10 @@ public class PlayerController : MonoBehaviour
             bullet.GetComponent<Rigidbody>().AddForce(direction* currentWeapon.GetComponent<Weapon>().projectilePrefab.GetComponent<Projectiles>().power, ForceMode.Impulse);
         }
     
-        //if (playerInput.actions["Grenade"].WasPressedThisFrame())
+        if (playerInput.actions["ThrowGrenade"].WasPressedThisFrame())
         {
-            //Toss Grenade
+            Instantiate(grenadePrefab);
+
         }
         if (playerInput.actions["SwapWeapon"].WasPressedThisFrame())
         {
