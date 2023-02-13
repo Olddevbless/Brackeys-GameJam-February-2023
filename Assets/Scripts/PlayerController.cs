@@ -7,11 +7,12 @@ public class PlayerController : MonoBehaviour
 {
     [SerializeField] PlayerInput playerInput;
     [SerializeField] int classSpeed;
-    [SerializeField] GameObject[] models;
-    [SerializeField] GameObject[] projectilePrefabs;
+    [SerializeField] GameObject model;
     [SerializeField] GameObject[] weapons;
     [SerializeField] GameObject holdergun;
-    [SerializeField] Classes[] classes;
+    [SerializeField] GameObject currentWeapon;
+    [SerializeField] Classes currentClass;
+    [SerializeField] int weaponIndex;
     Vector2 movement;
     Vector2 mousePos;
     // Start is called before the first frame update
@@ -25,11 +26,14 @@ public class PlayerController : MonoBehaviour
     {
         HandleMovement();
         HandleInput();
+        ChangeSoldier();
     }
     void ChangeSoldier()
     {
         //change to a different soldier
-        weapons = classes[0].weapons;
+        //change class -> class changes weapon
+        currentClass = model.GetComponent<Classes>();
+        weapons = currentClass.weapons;
     }
     void HandleInput()
     {
@@ -37,33 +41,45 @@ public class PlayerController : MonoBehaviour
        Vector3 direction = new Vector3(mousePos.x, mousePos.y, transform.position.z);
         holdergun.transform.LookAt(direction);
 
-       /* if (playerInput.actions["Fire"].WasPressedThisFrame())
+        if (playerInput.actions["Fire"].WasPressedThisFrame())
         {
             //Fire Gun
 
-            GameObject bullet = Instantiate(projectilePrefabs[0/*needs to change based on weapon], holdergun.transform.position, Quaternion.identity);
-            bullet.GetComponent<Rigidbody>().AddForce(/*projectilePrefabs[0].power direction,ForceMode.Impulse);
+            GameObject bullet = Instantiate(currentWeapon.GetComponent<Weapon>().projectilePrefab, holdergun.transform.position, Quaternion.identity);
+            bullet.GetComponent<Rigidbody>().AddForce(direction* currentWeapon.GetComponent<Weapon>().projectilePrefab.GetComponent<Projectiles>().power, ForceMode.Impulse);
         }
-    */
+    
         //if (playerInput.actions["Grenade"].WasPressedThisFrame())
         {
             //Toss Grenade
         }
-        //if (playerInput.actions["SwapWeapon"].WasPressedThisFrame())
+        if (playerInput.actions["SwapWeapon"].WasPressedThisFrame())
         {
+            if (weaponIndex < weapons.Length)
+            {
+                weaponIndex++;
+            }
+
             //Swap Weapon
+            else
+            {
+                weaponIndex = 0;
+            }
+            currentWeapon = weapons[weaponIndex];
+
+
         }
-        
+
     }
     void HandleMovement()
     {
         movement = playerInput.actions["Move"].ReadValue<Vector2>();
-        models[0].transform.Translate(new Vector3(movement.x * classSpeed * Time.deltaTime, 0, 0)); // left right movement
-        foreach(GameObject g  in models)
-        {
-            g.transform.Translate(new Vector3(movement.y * classSpeed * Time.deltaTime, 0, 0));
-        }
-        //if (playerInput.actions["Slide"].WasPressedThisFrame())
+        model.transform.Translate(new Vector3(movement.x * classSpeed * Time.deltaTime, 0, 0)); // left right movement
+        //foreach(GameObject g  in model)
+        //{
+            //g.transform.Translate(new Vector3(movement.y * classSpeed * Time.deltaTime, 0, 0));
+        //}
+        if (playerInput.actions["Slide"].WasPressedThisFrame())
         {
             //Slide Forward
         }
