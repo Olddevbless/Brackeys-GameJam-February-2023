@@ -14,8 +14,11 @@ public class PlayerController : MonoBehaviour
     [SerializeField] GameObject currentWeapon;
     [SerializeField] Classes currentClass;
     [SerializeField] int weaponIndex;
+    [SerializeField] int throwForce;
+    [SerializeField] GameObject mousePointer;
+    Vector3 dir;
     Vector2 movement;
-    Vector2 mousePos;
+    Vector3 mousePos;
     // Start is called before the first frame update
     void Start()
     {
@@ -29,9 +32,9 @@ public class PlayerController : MonoBehaviour
     void Update()
     {
         HandleMovement();
-        HandleInput();
-        HandleAim();
+        HandleInput(HandleAim());
         ChangeSoldier();
+        
     }
     void ChangeSoldier()
     {
@@ -41,24 +44,25 @@ public class PlayerController : MonoBehaviour
         currentClass = model.GetComponent<Classes>();
         weapons = currentClass.weapons;
     }
-    void HandleInput()
+    void HandleInput(Vector3 direction)
     {
        //mouseLook with the gun
-       Vector3 direction = new Vector3(mousePos.x, mousePos.y, transform.position.z);
-        holdergun.transform.LookAt(direction);
-
+       
+        
+        holdergun.transform.LookAt(mousePointer.transform);
         if (playerInput.actions["Fire"].WasPressedThisFrame())
         {
             //Fire Gun
 
-            GameObject bullet = Instantiate(currentWeapon.GetComponent<Weapon>().projectilePrefab, holdergun.transform.position, Quaternion.identity);
-            bullet.GetComponent<Rigidbody>().AddForce(direction* currentWeapon.GetComponent<Weapon>().projectilePrefab.GetComponent<Projectiles>().power, ForceMode.Impulse);
+            GameObject bullet = Instantiate(currentWeapon.GetComponent<Weapon>().projectilePrefab, transform.position, Quaternion.identity);
+            
+            bullet.GetComponent<Rigidbody>().AddForce(holdergun.transform.forward* currentWeapon.GetComponent<Weapon>().projectilePrefab.GetComponent<Projectiles>().power, ForceMode.Impulse);
         }
     
         if (playerInput.actions["ThrowGrenade"].WasPressedThisFrame())
         {
-            Instantiate(grenadePrefab);
-
+            GameObject grenade = Instantiate(grenadePrefab, transform.position, Quaternion.identity);
+            grenade.GetComponent<Rigidbody>().AddForce(direction * throwForce, ForceMode.Impulse);
         }
         if (playerInput.actions["SwapWeapon"].WasPressedThisFrame())
         {
@@ -103,9 +107,11 @@ public class PlayerController : MonoBehaviour
             //Crouch
         }
     }
-    void HandleAim()
+    Vector3 HandleAim()
     {
         mousePos = playerInput.actions["Look"].ReadValue<Vector2>();
-        
+        Debug.Log(mousePos);
+        dir = mousePos - transform.position;
+        return dir;
     }
 }
