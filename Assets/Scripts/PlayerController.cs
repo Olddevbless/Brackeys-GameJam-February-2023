@@ -18,7 +18,10 @@ public class PlayerController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-
+        model = GetComponentInChildren<Classes>().model;
+        currentClass = model.GetComponent<Classes>();
+        weapons = currentClass.weapons;
+        currentWeapon = weapons[weaponIndex];
     }
 
     // Update is called once per frame
@@ -26,12 +29,14 @@ public class PlayerController : MonoBehaviour
     {
         HandleMovement();
         HandleInput();
+        HandleAim();
         ChangeSoldier();
     }
     void ChangeSoldier()
     {
         //change to a different soldier
         //change class -> class changes weapon
+        model = GetComponentInChildren<Classes>().model;
         currentClass = model.GetComponent<Classes>();
         weapons = currentClass.weapons;
     }
@@ -74,7 +79,7 @@ public class PlayerController : MonoBehaviour
     void HandleMovement()
     {
         movement = playerInput.actions["Move"].ReadValue<Vector2>();
-        model.transform.Translate(new Vector3(movement.x * classSpeed * Time.deltaTime, 0, 0)); // left right movement
+        transform.Translate(new Vector3(movement.x * classSpeed * Time.deltaTime, 0, 0)); // left right movement
         //foreach(GameObject g  in model)
         //{
             //g.transform.Translate(new Vector3(movement.y * classSpeed * Time.deltaTime, 0, 0));

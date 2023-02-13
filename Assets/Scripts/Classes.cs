@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class Classes : MonoBehaviour
 {
+    public GameObject model;
     public GameObject[] weapons;
     
     // Start is called before the first frame update
