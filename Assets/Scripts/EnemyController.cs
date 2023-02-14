@@ -2,19 +2,24 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class WeaponMelee : MonoBehaviour
+public class EnemyController : MonoBehaviour
 {
-    public int attackRange;
-    public int damage;
+    [SerializeField] int enemyMaxHealth;
+    int enemyHealth;
     // Start is called before the first frame update
     void Start()
     {
-        
+        enemyHealth = enemyMaxHealth;
     }
 
     // Update is called once per frame
     void Update()
     {
-        
+
+    }
+
+    public void TakeDamage(int damage)
+    {
+        enemyHealth -= damage;
     }
 }

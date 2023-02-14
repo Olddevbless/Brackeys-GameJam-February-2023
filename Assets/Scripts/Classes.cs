@@ -6,16 +6,11 @@ public class Classes : MonoBehaviour
 {
     public GameObject model;
     public GameObject[] weapons;
+    public Vector3 boxColliderProne;
+    public Vector3 boxColliderCrouch;
+    public Vector3 boxColliderStand;
+    public int standSpeed;
+    public int proneSpeed;
+    public int classSpeed;
     
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
 }
