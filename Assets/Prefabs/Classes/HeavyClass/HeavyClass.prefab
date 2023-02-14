@@ -25,12 +25,12 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7301593700102569890}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 1.3203434, y: -5.306101, z: 14.560962}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 3
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &4337736593067952689
 MonoBehaviour:
@@ -48,3 +48,9 @@ MonoBehaviour:
   weapons:
   - {fileID: 2725318175390785468, guid: 8dbf037511927344ab3ab1763f84e1f9, type: 3}
   - {fileID: 8903453329096030212, guid: 87f8a7662ab02cd40b0d829851e34dc4, type: 3}
+  boxColliderProne: {x: 0, y: 0, z: 0}
+  boxColliderCrouch: {x: 0, y: 0, z: 0}
+  boxColliderStand: {x: 0, y: 0, z: 0}
+  standSpeed: 3
+  proneSpeed: 2
+  classSpeed: 3
