@@ -7,4 +7,5 @@ public class Projectiles : MonoBehaviour
     public int power;
     public int damage;
     
+    
 }

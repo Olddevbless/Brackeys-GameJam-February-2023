@@ -16,6 +16,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField] int weaponIndex;
     [SerializeField] int throwForce;
     [SerializeField] GameObject mousePointer;
+    [SerializeField] Camera cam;
     Vector3 dir;
     Vector2 movement;
     Vector3 mousePos;
@@ -32,9 +33,10 @@ public class PlayerController : MonoBehaviour
     void Update()
     {
         HandleMovement();
-        HandleInput(HandleAim());
+        HandleAim();
+        HandleInput();
         ChangeSoldier();
-        
+
     }
     void ChangeSoldier()
     {
@@ -44,25 +46,34 @@ public class PlayerController : MonoBehaviour
         currentClass = model.GetComponent<Classes>();
         weapons = currentClass.weapons;
     }
-    void HandleInput(Vector3 direction)
+    void HandleInput()
     {
-       //mouseLook with the gun
-       
+        //mouseLook with the gun
+
         
-        holdergun.transform.LookAt(mousePointer.transform);
         if (playerInput.actions["Fire"].WasPressedThisFrame())
         {
             //Fire Gun
+            if (currentWeapon.GetComponent<Weapon>())
+            {
+                GameObject bullet = Instantiate(currentWeapon.GetComponent<Weapon>().projectilePrefab, transform.position, Quaternion.identity);
+                bullet.transform.LookAt(mousePointer.transform.position);
+                bullet.GetComponent<Rigidbody>().AddForce(dir * currentWeapon.GetComponent<Weapon>().projectilePrefab.GetComponent<Projectiles>().power, ForceMode.Impulse);
+            }
+            else if (currentWeapon.GetComponent<WeaponMelee>())
+            {
+                //stab/cut/smack animation
+                RaycastHit hit;
+                Ray hitRay = new Ray(currentWeapon.transform.position, dir * currentWeapon.GetComponent<WeaponMelee>().attackRange);
+                Debug.DrawRay(currentWeapon.transform.position, dir * currentWeapon.GetComponent<WeaponMelee>().attackRange);
+            }
 
-            GameObject bullet = Instantiate(currentWeapon.GetComponent<Weapon>().projectilePrefab, transform.position, Quaternion.identity);
-            
-            bullet.GetComponent<Rigidbody>().AddForce(holdergun.transform.forward* currentWeapon.GetComponent<Weapon>().projectilePrefab.GetComponent<Projectiles>().power, ForceMode.Impulse);
         }
-    
+
         if (playerInput.actions["ThrowGrenade"].WasPressedThisFrame())
         {
             GameObject grenade = Instantiate(grenadePrefab, transform.position, Quaternion.identity);
-            grenade.GetComponent<Rigidbody>().AddForce(direction * throwForce, ForceMode.Impulse);
+            grenade.GetComponent<Rigidbody>().AddForce(dir * throwForce, ForceMode.Impulse);
         }
         if (playerInput.actions["SwapWeapon"].WasPressedThisFrame())
         {
@@ -72,7 +83,7 @@ public class PlayerController : MonoBehaviour
             }
 
             //Swap Weapon
-            else
+            if (weaponIndex >=weapons.Length)
             {
                 weaponIndex = 0;
             }
@@ -86,10 +97,10 @@ public class PlayerController : MonoBehaviour
     {
         movement = playerInput.actions["Move"].ReadValue<Vector2>();
         transform.Translate(new Vector3(movement.x * classSpeed * Time.deltaTime, 0, 0)); // left right movement
-        //foreach(GameObject g  in model)
-        //{
-            //g.transform.Translate(new Vector3(movement.y * classSpeed * Time.deltaTime, 0, 0));
-        //}
+                                                                                          //foreach(GameObject g  in model)
+                                                                                          //{
+                                                                                          //g.transform.Translate(new Vector3(movement.y * classSpeed * Time.deltaTime, 0, 0));
+                                                                                          //}
         if (playerInput.actions["Slide"].WasPressedThisFrame())
         {
             //Slide Forward
@@ -107,11 +118,18 @@ public class PlayerController : MonoBehaviour
             //Crouch
         }
     }
-    Vector3 HandleAim()
+    void HandleAim()
     {
-        mousePos = playerInput.actions["Look"].ReadValue<Vector2>();
-        Debug.Log(mousePos);
-        dir = mousePos - transform.position;
-        return dir;
+        Ray ray = cam.ScreenPointToRay(Input.mousePosition);
+        mousePointer.transform.position = ray.GetPoint(Vector3.Distance(ray.origin, transform.position));
+        // get the mouse position in world space
+        //mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+
+        // only use the x and y position of the mouse
+        //mousePos.z = this.transform.position.z ;
+
+        // make the player look towards the mouse position
+        dir = (mousePointer.transform.position - transform.position).normalized;
+
     }
 }
