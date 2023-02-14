@@ -276,6 +276,7 @@ GameObject:
   - component: {fileID: 349513962}
   - component: {fileID: 349513961}
   - component: {fileID: 349513963}
+  - component: {fileID: 349513964}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -343,7 +344,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   playerInput: {fileID: 349513961}
-  classSpeed: 2
   model: {fileID: 0}
   weapons: []
   grenadePrefab: {fileID: 5460757038864955938, guid: 4ba19956b5530684d8ed9b99ca17fc70, type: 3}
@@ -354,6 +354,21 @@ MonoBehaviour:
   throwForce: 10
   mousePointer: {fileID: 174941976}
   cam: {fileID: 963194227}
+  slideForce: 0
+  jumpForce: 0
+--- !u!65 &349513964
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 349513960}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 1, y: 1, z: 1}
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1001 &503171311
 PrefabInstance:
   m_ObjectHideFlags: 0

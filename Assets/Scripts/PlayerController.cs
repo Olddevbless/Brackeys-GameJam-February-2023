@@ -6,11 +6,12 @@ using UnityEngine.InputSystem;
 public class PlayerController : MonoBehaviour
 {
     [SerializeField] PlayerInput playerInput;
-    [SerializeField] int classSpeed;
+    int playerHealth;
+    [SerializeField] int playerMaxHealth;
+    [Header("Class Properties")]
     [SerializeField] GameObject model;
     [SerializeField] GameObject[] weapons;
     [SerializeField] GameObject grenadePrefab;
-    [SerializeField] GameObject holdergun;
     [SerializeField] GameObject currentWeapon;
     [SerializeField] Classes currentClass;
     [SerializeField] int weaponIndex;
@@ -18,8 +19,14 @@ public class PlayerController : MonoBehaviour
     [SerializeField] GameObject mousePointer;
     [SerializeField] Camera cam;
     Vector3 dir;
-    Vector2 movement;
+    
     Vector3 mousePos;
+    [Header("Movement")]
+    Vector2 movement;
+    [SerializeField] int standProneSpeed;
+    [SerializeField] int slideForce;
+    [SerializeField] int jumpForce;
+    
     // Start is called before the first frame update
     void Start()
     {
@@ -35,13 +42,19 @@ public class PlayerController : MonoBehaviour
         HandleMovement();
         HandleAim();
         HandleInput();
-        ChangeSoldier();
+        if (playerHealth<=0)
+        {
+            ChangeSoldier();
+            playerHealth = playerMaxHealth;
+        }
+
 
     }
     void ChangeSoldier()
     {
         //change to a different soldier
         //change class -> class changes weapon
+        
         model = GetComponentInChildren<Classes>().model;
         currentClass = model.GetComponent<Classes>();
         weapons = currentClass.weapons;
@@ -56,6 +69,7 @@ public class PlayerController : MonoBehaviour
             //Fire Gun
             if (currentWeapon.GetComponent<Weapon>())
             {
+                //need to add firing rate
                 GameObject bullet = Instantiate(currentWeapon.GetComponent<Weapon>().projectilePrefab, transform.position, Quaternion.identity);
                 bullet.transform.LookAt(mousePointer.transform.position);
                 bullet.GetComponent<Rigidbody>().AddForce(dir * currentWeapon.GetComponent<Weapon>().projectilePrefab.GetComponent<Projectiles>().power, ForceMode.Impulse);
@@ -66,6 +80,14 @@ public class PlayerController : MonoBehaviour
                 RaycastHit hit;
                 Ray hitRay = new Ray(currentWeapon.transform.position, dir * currentWeapon.GetComponent<WeaponMelee>().attackRange);
                 Debug.DrawRay(currentWeapon.transform.position, dir * currentWeapon.GetComponent<WeaponMelee>().attackRange);
+                if (Physics.Raycast(hitRay, out hit,currentWeapon.GetComponent<WeaponMelee>().attackRange))
+                {
+                    if (hit.collider.tag == "Enemy")
+                    {
+                        hit.collider.gameObject.GetComponent<EnemyController>().TakeDamage(currentWeapon.GetComponent<WeaponMelee>().damage);
+                    }
+                }
+                //need to add hit effect and attack cooldown
             }
 
         }
@@ -96,26 +118,35 @@ public class PlayerController : MonoBehaviour
     void HandleMovement()
     {
         movement = playerInput.actions["Move"].ReadValue<Vector2>();
-        transform.Translate(new Vector3(movement.x * classSpeed * Time.deltaTime, 0, 0)); // left right movement
-                                                                                          //foreach(GameObject g  in model)
-                                                                                          //{
-                                                                                          //g.transform.Translate(new Vector3(movement.y * classSpeed * Time.deltaTime, 0, 0));
-                                                                                          //}
+        transform.Translate(new Vector3(movement.x * model.GetComponent<Classes>().classSpeed* standProneSpeed * Time.deltaTime, 0, 0));
+
+        if (playerInput.actions["Jump"].WasPressedThisFrame())
+        {
+            this.GetComponent<Rigidbody>().AddForce(transform.up * jumpForce);
+            //play jump animation
+        }
         if (playerInput.actions["Slide"].WasPressedThisFrame())
         {
-            //Slide Forward
+            this.GetComponent<Rigidbody>().AddForce(dir * slideForce);
+            //play slide animation
         }
         if (playerInput.actions["Stand"].IsPressed())
         {
             //Stand tall
+            gameObject.GetComponent<BoxCollider>().size = model.GetComponent<Classes>().boxColliderStand;
+            standProneSpeed = model.GetComponent<Classes>().standSpeed;
         }
         else if (playerInput.actions["Prone"].IsPressed())
         {
-            //Go prone
+            gameObject.GetComponent<BoxCollider>().size = model.GetComponent<Classes>().boxColliderProne; // set collider height to crouch height
+            standProneSpeed = model.GetComponent<Classes>().proneSpeed;
+            // Prone animation
+
         }
         else
         {
-            //Crouch
+            gameObject.GetComponent<BoxCollider>().size = model.GetComponent<Classes>().boxColliderCrouch;
+            standProneSpeed = model.GetComponent<Classes>().standSpeed;
         }
     }
     void HandleAim()
@@ -131,5 +162,16 @@ public class PlayerController : MonoBehaviour
         // make the player look towards the mouse position
         dir = (mousePointer.transform.position - transform.position).normalized;
 
+    }
+    void TakeDamage(int damage)
+    {
+        playerHealth = -damage;
+    }
+    private void OnCollisionEnter(Collision collision)
+    {
+        if (collision.gameObject.CompareTag("EnemyProjectiles"))
+        {
+            TakeDamage(collision.gameObject.GetComponent<Projectiles>().damage);
+        }
     }
 }
