@@ -113,6 +113,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   power: 0
   damage: 0
+  timeToDestroy: 2
 --- !u!54 &5182173257331101223
 Rigidbody:
   m_ObjectHideFlags: 0

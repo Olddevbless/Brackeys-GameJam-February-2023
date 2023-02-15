@@ -44,7 +44,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e855b1a24d08fc54baa6dca95395b215, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  model: {fileID: 0}
+  model: {fileID: 5298343172845416136}
   weapons:
   - {fileID: 245099255230479271, guid: fee4c7e0008110949b17c8319719f396, type: 3}
   boxColliderProne: {x: 0, y: 0, z: 0}

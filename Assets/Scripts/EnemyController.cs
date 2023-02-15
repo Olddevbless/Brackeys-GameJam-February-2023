@@ -6,6 +6,7 @@ public class EnemyController : MonoBehaviour
 {
     [SerializeField] int enemyMaxHealth;
     int enemyHealth;
+    public bool isArmored;
     // Start is called before the first frame update
     void Start()
     {

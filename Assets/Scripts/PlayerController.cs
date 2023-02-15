@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.UI;
 
 public class PlayerController : MonoBehaviour
 {
@@ -14,12 +15,12 @@ public class PlayerController : MonoBehaviour
     [SerializeField] GameObject grenadePrefab;
     [SerializeField] GameObject currentWeapon;
     [SerializeField] Classes currentClass;
-    [SerializeField] int weaponIndex;
+    [SerializeField] int weaponIndex = 0;
     [SerializeField] int throwForce;
     [SerializeField] GameObject mousePointer;
     [SerializeField] Camera cam;
     Vector3 dir;
-    
+    Camera mainCam;
     Vector3 mousePos;
     [Header("Movement")]
     Vector2 movement;
@@ -30,6 +31,7 @@ public class PlayerController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        mainCam = Camera.main;
         model = GetComponentInChildren<Classes>().model;
         currentClass = model.GetComponent<Classes>();
         weapons = currentClass.weapons;
@@ -63,7 +65,7 @@ public class PlayerController : MonoBehaviour
     {
         //mouseLook with the gun
 
-        
+
         if (playerInput.actions["Fire"].WasPressedThisFrame())
         {
             //Fire Gun
@@ -80,7 +82,7 @@ public class PlayerController : MonoBehaviour
                 RaycastHit hit;
                 Ray hitRay = new Ray(currentWeapon.transform.position, dir * currentWeapon.GetComponent<WeaponMelee>().attackRange);
                 Debug.DrawRay(currentWeapon.transform.position, dir * currentWeapon.GetComponent<WeaponMelee>().attackRange);
-                if (Physics.Raycast(hitRay, out hit,currentWeapon.GetComponent<WeaponMelee>().attackRange))
+                if (Physics.Raycast(hitRay, out hit, currentWeapon.GetComponent<WeaponMelee>().attackRange))
                 {
                     if (hit.collider.tag == "Enemy")
                     {
@@ -105,7 +107,7 @@ public class PlayerController : MonoBehaviour
             }
 
             //Swap Weapon
-            if (weaponIndex >=weapons.Length)
+            if (weaponIndex >= weapons.Length)
             {
                 weaponIndex = 0;
             }
@@ -115,6 +117,7 @@ public class PlayerController : MonoBehaviour
         }
 
     }
+    
     void HandleMovement()
     {
         movement = playerInput.actions["Move"].ReadValue<Vector2>();
@@ -127,6 +130,7 @@ public class PlayerController : MonoBehaviour
         }
         if (playerInput.actions["Slide"].WasPressedThisFrame())
         {
+            
             this.GetComponent<Rigidbody>().AddForce(dir * slideForce);
             //play slide animation
         }
