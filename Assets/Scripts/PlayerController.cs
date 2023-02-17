@@ -27,15 +27,17 @@ public class PlayerController : MonoBehaviour
     [SerializeField] int standProneSpeed;
     [SerializeField] int slideForce;
     [SerializeField] int jumpForce;
-    
+
     // Start is called before the first frame update
     void Start()
     {
+        //this.transform.position = FindObjectOfType<SpawnManager>().playerSpawnPoints[Random.Range(0, FindObjectOfType<SpawnManager>().playerSpawnPoints.Count)].transform.position;
+        ChangeSoldier();
         mainCam = Camera.main;
         model = GetComponentInChildren<Classes>().model;
         currentClass = model.GetComponent<Classes>();
-        weapons = currentClass.weapons;
-        currentWeapon = weapons[weaponIndex];
+
+
     }
 
     // Update is called once per frame
@@ -44,10 +46,16 @@ public class PlayerController : MonoBehaviour
         HandleMovement();
         HandleAim();
         HandleInput();
-        if (playerHealth<=0)
+        if (playerHealth <= 0)
         {
             ChangeSoldier();
             playerHealth = playerMaxHealth;
+        }
+        if (model != null)
+        {
+            weapons = currentClass.weapons;
+            currentWeapon = weapons[weaponIndex];
+
         }
 
 
@@ -56,7 +64,13 @@ public class PlayerController : MonoBehaviour
     {
         //change to a different soldier
         //change class -> class changes weapon
+
         
+        int i = Random.Range(0,FindObjectOfType<SpawnManager>().playerSpawnPoints.Count);
+        FindObjectOfType<SpawnManager>().playerSpawnPoints[i].SetActive(true);
+        FindObjectOfType<SpawnManager>().enemySpawnPoints[i].SetActive(true);
+        model = FindObjectOfType<SpawnManager>().playerSpawnPoints[i].GetComponent<PlayerSpawner>().SpawnNewClass(this.transform.position);
+        this.transform.position = model.transform.position;
         model = GetComponentInChildren<Classes>().model;
         currentClass = model.GetComponent<Classes>();
         weapons = currentClass.weapons;
@@ -65,7 +79,10 @@ public class PlayerController : MonoBehaviour
     {
         //mouseLook with the gun
 
-
+        if (Input.GetKeyDown(KeyCode.T))
+        {
+            ChangeSoldier();
+        }
         if (playerInput.actions["Fire"].WasPressedThisFrame())
         {
             //Fire Gun
@@ -111,7 +128,7 @@ public class PlayerController : MonoBehaviour
             {
                 weaponIndex = 0;
             }
-            currentWeapon = weapons[weaponIndex];
+            
 
 
         }
@@ -121,37 +138,41 @@ public class PlayerController : MonoBehaviour
     void HandleMovement()
     {
         movement = playerInput.actions["Move"].ReadValue<Vector2>();
-        transform.Translate(new Vector3(movement.x * model.GetComponent<Classes>().classSpeed* standProneSpeed * Time.deltaTime, 0, 0));
+        if (model != null)
+        {
+            transform.Translate(new Vector3(movement.x * model.GetComponent<Classes>().classSpeed * standProneSpeed * Time.deltaTime, 0, 0));
 
-        if (playerInput.actions["Jump"].WasPressedThisFrame())
-        {
-            this.GetComponent<Rigidbody>().AddForce(transform.up * jumpForce);
-            //play jump animation
-        }
-        if (playerInput.actions["Slide"].WasPressedThisFrame())
-        {
-            
-            this.GetComponent<Rigidbody>().AddForce(dir * slideForce);
-            //play slide animation
-        }
-        if (playerInput.actions["Stand"].IsPressed())
-        {
-            //Stand tall
-            gameObject.GetComponent<BoxCollider>().size = model.GetComponent<Classes>().boxColliderStand;
-            standProneSpeed = model.GetComponent<Classes>().standSpeed;
-        }
-        else if (playerInput.actions["Prone"].IsPressed())
-        {
-            gameObject.GetComponent<BoxCollider>().size = model.GetComponent<Classes>().boxColliderProne; // set collider height to crouch height
-            standProneSpeed = model.GetComponent<Classes>().proneSpeed;
-            // Prone animation
+            if (playerInput.actions["Jump"].WasPressedThisFrame())
+            {
+                this.GetComponent<Rigidbody>().AddForce(transform.up * jumpForce);
+                //play jump animation
+            }
+            if (playerInput.actions["Slide"].WasPressedThisFrame())
+            {
 
+                this.GetComponent<Rigidbody>().AddForce(dir * slideForce);
+                //play slide animation
+            }
+            if (playerInput.actions["Stand"].IsPressed())
+            {
+                //Stand tall
+                gameObject.GetComponent<BoxCollider>().size = model.GetComponent<Classes>().boxColliderStand;
+                standProneSpeed = model.GetComponent<Classes>().standSpeed;
+            }
+            else if (playerInput.actions["Prone"].IsPressed())
+            {
+                gameObject.GetComponent<BoxCollider>().size = model.GetComponent<Classes>().boxColliderProne; // set collider height to crouch height
+                standProneSpeed = model.GetComponent<Classes>().proneSpeed;
+                // Prone animation
+
+            }
+            else
+            {
+                gameObject.GetComponent<BoxCollider>().size = model.GetComponent<Classes>().boxColliderCrouch;
+                standProneSpeed = model.GetComponent<Classes>().standSpeed;
+            }
         }
-        else
-        {
-            gameObject.GetComponent<BoxCollider>().size = model.GetComponent<Classes>().boxColliderCrouch;
-            standProneSpeed = model.GetComponent<Classes>().standSpeed;
-        }
+
     }
     void HandleAim()
     {

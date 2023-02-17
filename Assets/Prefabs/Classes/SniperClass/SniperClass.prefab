@@ -47,9 +47,9 @@ MonoBehaviour:
   model: {fileID: 5298343172845416136}
   weapons:
   - {fileID: 245099255230479271, guid: fee4c7e0008110949b17c8319719f396, type: 3}
-  boxColliderProne: {x: 0, y: 0, z: 0}
-  boxColliderCrouch: {x: 0, y: 0, z: 0}
-  boxColliderStand: {x: 0, y: 0, z: 0}
+  boxColliderProne: {x: 1, y: 1, z: 1}
+  boxColliderCrouch: {x: 1, y: 1, z: 1}
+  boxColliderStand: {x: 1, y: 1, z: 1}
   standSpeed: 4
   proneSpeed: 2
   classSpeed: 4

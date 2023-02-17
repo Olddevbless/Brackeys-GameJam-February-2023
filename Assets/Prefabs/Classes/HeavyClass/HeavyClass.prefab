@@ -45,10 +45,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   model: {fileID: 7301593700102569890}
-  weapons: []
-  boxColliderProne: {x: 0, y: 0, z: 0}
-  boxColliderCrouch: {x: 0, y: 0, z: 0}
-  boxColliderStand: {x: 0, y: 0, z: 0}
-  standSpeed: 0
-  proneSpeed: 0
-  classSpeed: 0
+  weapons:
+  - {fileID: 2725318175390785468, guid: 8dbf037511927344ab3ab1763f84e1f9, type: 3}
+  - {fileID: 8903453329096030212, guid: 87f8a7662ab02cd40b0d829851e34dc4, type: 3}
+  boxColliderProne: {x: 1, y: 1, z: 1}
+  boxColliderCrouch: {x: 1, y: 1, z: 1}
+  boxColliderStand: {x: 1, y: 1, z: 1}
+  standSpeed: 5
+  proneSpeed: 3
+  classSpeed: 5
