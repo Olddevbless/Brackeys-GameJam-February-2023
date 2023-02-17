@@ -9,12 +9,14 @@ public class MapGenerator : MonoBehaviour
     int[] triangles;
     [SerializeField] int xSize;
     [SerializeField] int zSize;
+    [SerializeField] Gradient gradient;
     private void Start()
     {
         mesh = new Mesh();
         GetComponent<MeshFilter>().mesh = mesh;
         CreateShape();
         UpdateShape();
+        ColorShape();
     }
     void CreateShape()
     {
@@ -53,15 +55,42 @@ public class MapGenerator : MonoBehaviour
 
 
     }
+    void ColorShape()
+    {
+        // Get the mesh and its vertices
+        Mesh mesh = GetComponent<MeshFilter>().mesh;
+        Vector3[] vertices = mesh.vertices;
+
+        // Create an array to hold the vertex colors
+        Color[] colors = new Color[vertices.Length];
+
+        // Create a gradient
+
+        // Loop through each vertex and set its color based on the gradient
+        for (int i = 0; i < vertices.Length; i++)
+        {
+            //float height = Mathf.InverseLerp(minTerrainHeight, maxTerrainHeight, vertices[i].y);
+
+            float height = vertices[i].y;
+            colors[i] = gradient.Evaluate(height);
+
+        }
+
+        // Set the vertex colors for the mesh
+        mesh.colors = colors;
+
+        
+    }
     void UpdateShape()
     {
         mesh.Clear();
-        mesh.triangles = triangles;
         mesh.vertices = vertices;
+        mesh.triangles = triangles;
         mesh.RecalculateNormals();
+        
     }
 
-    private void OnDrawGizmos()
+    /*private void OnDrawGizmos()
     {
         if (vertices == null)
             return;
@@ -69,6 +98,6 @@ public class MapGenerator : MonoBehaviour
         {
             Gizmos.DrawSphere(vertices[i], 0.1f);
         }
-    }
+    }*/
 
 }
