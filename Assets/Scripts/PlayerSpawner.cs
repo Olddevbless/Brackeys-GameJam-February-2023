@@ -7,7 +7,7 @@ public class PlayerSpawner : MonoBehaviour
     public GameObject[] models;
     public GameObject SpawnNewClass(Vector3 playerPos)
     {
-        GameObject model =Instantiate(models[Random.Range(0, 2)], new Vector3(transform.position.x, playerPos.y, transform.position.z), Quaternion.identity);
+        GameObject model = Instantiate(models[Random.Range(0, 2)], new Vector3(transform.position.x, playerPos.y, transform.position.z), Quaternion.identity, FindObjectOfType<PlayerController>().transform);
         return model;
     }
 }

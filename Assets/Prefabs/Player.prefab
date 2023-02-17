@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 9182172752052253494}
   - component: {fileID: 9182172752052253489}
   - component: {fileID: 9182172752052253488}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Player
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -78,8 +78,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   playerInput: {fileID: 9182172752052253492}
-  playerMaxHealth: 0
-  model: {fileID: 0}
+  playerMaxHealth: 50
+  model: {fileID: 8704303709865827733, guid: 955d1acea238d5242b37fa287e6c640d, type: 3}
   weapons: []
   grenadePrefab: {fileID: 5460757038864955938, guid: 4ba19956b5530684d8ed9b99ca17fc70, type: 3}
   currentWeapon: {fileID: 0}
@@ -89,8 +89,8 @@ MonoBehaviour:
   mousePointer: {fileID: 0}
   cam: {fileID: 0}
   standProneSpeed: 0
-  slideForce: 0
-  jumpForce: 0
+  slideForce: 100
+  jumpForce: 100
 --- !u!65 &9182172752052253489
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -102,7 +102,7 @@ BoxCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 1, y: 1, z: 1}
+  m_Size: {x: 1, y: 5, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!54 &9182172752052253488
 Rigidbody:
@@ -118,5 +118,5 @@ Rigidbody:
   m_UseGravity: 1
   m_IsKinematic: 0
   m_Interpolate: 0
-  m_Constraints: 0
+  m_Constraints: 112
   m_CollisionDetection: 0

@@ -31,6 +31,7 @@ public class PlayerController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        playerHealth = playerMaxHealth;
         //this.transform.position = FindObjectOfType<SpawnManager>().playerSpawnPoints[Random.Range(0, FindObjectOfType<SpawnManager>().playerSpawnPoints.Count)].transform.position;
         ChangeSoldier();
         mainCam = Camera.main;
@@ -46,6 +47,8 @@ public class PlayerController : MonoBehaviour
         HandleMovement();
         HandleAim();
         HandleInput();
+        model = GetComponentInChildren<Classes>().model;
+        model.transform.position = this.transform.position;
         if (playerHealth <= 0)
         {
             ChangeSoldier();
@@ -64,14 +67,16 @@ public class PlayerController : MonoBehaviour
     {
         //change to a different soldier
         //change class -> class changes weapon
-
-        
-        int i = Random.Range(0,FindObjectOfType<SpawnManager>().playerSpawnPoints.Count);
+        if (model != null)
+        {
+            Destroy(model);
+        }
+        int i = Random.Range(0, FindObjectOfType<SpawnManager>().playerSpawnPoints.Count);
         FindObjectOfType<SpawnManager>().playerSpawnPoints[i].SetActive(true);
         FindObjectOfType<SpawnManager>().enemySpawnPoints[i].SetActive(true);
         model = FindObjectOfType<SpawnManager>().playerSpawnPoints[i].GetComponent<PlayerSpawner>().SpawnNewClass(this.transform.position);
         this.transform.position = model.transform.position;
-        model = GetComponentInChildren<Classes>().model;
+        
         currentClass = model.GetComponent<Classes>();
         weapons = currentClass.weapons;
     }
@@ -176,7 +181,7 @@ public class PlayerController : MonoBehaviour
     }
     void HandleAim()
     {
-        Ray ray = cam.ScreenPointToRay(Input.mousePosition);
+        Ray ray = mainCam.ScreenPointToRay(Input.mousePosition);
         mousePointer.transform.position = ray.GetPoint(Vector3.Distance(ray.origin, transform.position));
         // get the mouse position in world space
         //mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
