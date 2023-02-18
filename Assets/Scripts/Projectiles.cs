@@ -15,15 +15,11 @@ public class Projectiles : MonoBehaviour
     {
         if (collision.gameObject.tag == "Enemy")
         {
-            if (collision.gameObject.GetComponent<EnemyController>().isArmored)
-            {
-                collision.gameObject.GetComponent<EnemyController>().TakeDamage(damage / 2);
-            }
-            else
-            {
+            
+            
                 collision.gameObject.GetComponent<EnemyController>().TakeDamage(damage);
 
-            }
+            
             Destroy(gameObject);
         }
     }

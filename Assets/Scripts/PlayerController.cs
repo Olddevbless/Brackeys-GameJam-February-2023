@@ -183,13 +183,14 @@ public class PlayerController : MonoBehaviour
     {
         Ray ray = mainCam.ScreenPointToRay(Input.mousePosition);
         mousePointer.transform.position = ray.GetPoint(Vector3.Distance(ray.origin, transform.position));
+        Debug.Log(mousePointer.transform.position);
         // get the mouse position in world space
         //mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
 
-        // only use the x and y position of the mouse
-        //mousePos.z = this.transform.position.z ;
+        mousePointer.transform.position = new Vector3(mousePointer.transform.position.x, mousePointer.transform.position.y, transform.position.z);
+        Debug.Log(mousePointer.transform.position);
 
-        // make the player look towards the mouse position
+        // calculate the direction of the shot based on the modified mouse position
         dir = (mousePointer.transform.position - transform.position).normalized;
 
     }
