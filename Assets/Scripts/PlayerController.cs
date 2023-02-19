@@ -18,6 +18,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField] int weaponIndex = 0;
     [SerializeField] int throwForce;
     [SerializeField] GameObject mousePointer;
+    [SerializeField] Image mouseReticle;
     [SerializeField] Camera cam;
     Vector3 dir;
     Camera mainCam;
@@ -183,18 +184,19 @@ public class PlayerController : MonoBehaviour
     {
         Ray ray = mainCam.ScreenPointToRay(Input.mousePosition);
         mousePointer.transform.position = ray.GetPoint(Vector3.Distance(ray.origin, transform.position));
-        Debug.Log(mousePointer.transform.position);
+
         // get the mouse position in world space
         //mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
 
         mousePointer.transform.position = new Vector3(mousePointer.transform.position.x, mousePointer.transform.position.y, transform.position.z);
-        Debug.Log(mousePointer.transform.position);
+        mouseReticle.transform.position = new Vector3(Input.mousePosition.x,Input.mousePosition.y,0);
+
 
         // calculate the direction of the shot based on the modified mouse position
         dir = (mousePointer.transform.position - transform.position).normalized;
 
     }
-    void TakeDamage(int damage)
+    public void TakeDamage(int damage)
     {
         playerHealth = -damage;
     }
