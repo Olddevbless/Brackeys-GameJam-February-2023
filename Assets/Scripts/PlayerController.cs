@@ -162,19 +162,19 @@ public class PlayerController : MonoBehaviour
             if (playerInput.actions["Stand"].IsPressed())
             {
                 //Stand tall
-                gameObject.GetComponent<BoxCollider>().size = model.GetComponent<Classes>().boxColliderStand;
+                model.GetComponent<BoxCollider>().size = model.GetComponent<Classes>().boxColliderStand;
                 standProneSpeed = model.GetComponent<Classes>().standSpeed;
             }
             else if (playerInput.actions["Prone"].IsPressed())
             {
-                gameObject.GetComponent<BoxCollider>().size = model.GetComponent<Classes>().boxColliderProne; // set collider height to crouch height
+                model.GetComponent<BoxCollider>().size = model.GetComponent<Classes>().boxColliderProne; // set collider height to crouch height
                 standProneSpeed = model.GetComponent<Classes>().proneSpeed;
                 // Prone animation
 
             }
             else
             {
-                gameObject.GetComponent<BoxCollider>().size = model.GetComponent<Classes>().boxColliderCrouch;
+                model.GetComponent<BoxCollider>().size = model.GetComponent<Classes>().boxColliderCrouch;
                 standProneSpeed = model.GetComponent<Classes>().standSpeed;
             }
         }

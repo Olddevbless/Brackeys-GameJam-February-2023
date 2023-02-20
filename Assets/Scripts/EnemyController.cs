@@ -16,8 +16,9 @@ public class EnemyController : MonoBehaviour
     [SerializeField] int ammo;
     [SerializeField] float attackTimer = 0f;
     [SerializeField] float attackDelay = 2f; // default delay time
-    Image sniperShotImage;
+    [SerializeField] Image sniperShotImage;
     [SerializeField] Sprite[] sniperShotSprites;
+    [SerializeField] int sniperDamage;
     public bool sniperMiss;
     float sniperShotTimer;
     [SerializeField] float maxSniperShotTime;
@@ -64,16 +65,23 @@ public class EnemyController : MonoBehaviour
 
     public IEnumerator SniperAttack(Vector3 targetPosition, float time)
     {
-        
+
         yield return new WaitForSeconds(time);
-        Instantiate(sniperShotPrefab, targetPosition, Quaternion.identity);
-        if (sniperMiss)
+        //Vector3 dir = (targetPosition - this.transform.position).normalized;
+        RaycastHit sniperrayHit;
+        Ray sniperRay = new Ray(transform.position, targetPosition);
+        Debug.DrawLine(transform.position, targetPosition, Color.black,10f);
+        if (Physics.Raycast(sniperRay, out sniperrayHit, Mathf.Infinity))
+        {
+            Debug.Log(sniperrayHit.collider.name);
+            if (sniperrayHit.collider.tag=="Player")
+            {
+                sniperrayHit.collider.gameObject.GetComponent<PlayerController>().TakeDamage(sniperDamage);
+            }
+        }
+        else 
         {
             ActiveSniperShotPNG(sniperShotSprites);
-
-
-
-
             
         }
     }
