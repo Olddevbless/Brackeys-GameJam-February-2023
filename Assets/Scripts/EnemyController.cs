@@ -19,12 +19,14 @@ public class EnemyController : MonoBehaviour
     [SerializeField] Image sniperShotImage;
     [SerializeField] Sprite[] sniperShotSprites;
     [SerializeField] int sniperDamage;
+    [SerializeField] ParticleSystem enemyParticle;
     public bool sniperMiss;
     float sniperShotTimer;
     [SerializeField] float maxSniperShotTime;
     // Start is called before the first frame update
     void Start()
     {
+        
         enemyHealth = enemyMaxHealth;
         Image sniperShotImage = GameObject.FindGameObjectWithTag("SniperShotImage").GetComponent<Image>();
     }
@@ -40,7 +42,7 @@ public class EnemyController : MonoBehaviour
         }
         if (isSniper && isAttacking && ammo > 0 && attackTimer <= 0f)
         {
-            StartCoroutine(AttackDelay(0.5f));
+            StartCoroutine(AttackDelay(3f));
             ammo--;
             attackTimer = attackDelay;
         }
@@ -65,13 +67,15 @@ public class EnemyController : MonoBehaviour
 
     public IEnumerator SniperAttack(Vector3 targetPosition, float time)
     {
-
+        var em = enemyParticle.emission;
+        em.enabled = true;
         yield return new WaitForSeconds(time);
+        em.enabled = false;
         //Vector3 dir = (targetPosition - this.transform.position).normalized;
         RaycastHit sniperrayHit;
         Ray sniperRay = new Ray(transform.position, targetPosition);
-        Debug.DrawLine(transform.position, targetPosition, Color.black,10f);
-        if (Physics.Raycast(sniperRay, out sniperrayHit, Mathf.Infinity))
+        Debug.DrawLine(transform.position, targetPosition, Color.black,time);
+        if (Physics.Raycast(sniperRay, out sniperrayHit, 1000))
         {
             Debug.Log(sniperrayHit.collider.name);
             if (sniperrayHit.collider.tag=="Player")
